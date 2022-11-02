@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  jsonote:
+    build: .
+    container_name: jsonote
+    volumes:
+      - ./jsonote:/root/
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
