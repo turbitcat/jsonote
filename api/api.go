@@ -3,6 +3,7 @@ package api
 import (
 	"net/http"
 	"os"
+	"path"
 
 	"github.com/turbitcat/jsonote/v2/service"
 	"github.com/turbitcat/jsonote/v2/wsgo"
@@ -26,7 +27,12 @@ func (s *JsonNoteApi) Run() error {
 }
 
 func New() *JsonNoteApi {
-	noter := service.NewNoter("./data", "./data/history", true)
+	dataPath := os.Getenv("JSONOTE_PATH")
+	if dataPath == "" {
+		dataPath = "./data"
+	}
+	hisPath := path.Join(dataPath, "history")
+	noter := service.NewNoter(dataPath, hisPath, true)
 	server := defaultServer(noter)
 	r := JsonNoteApi{server: server, noter: noter}
 	return &r

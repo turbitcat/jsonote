@@ -3,8 +3,10 @@ services:
   jsonote:
     build: .
     container_name: jsonote
+    environment:
+      - JSONOTE_PATH: "/data"
     volumes:
-      - ./jsonote:/root/
+      - ./data:/data/
     ports:
       - "8088:8088"
     restart: unless-stopped
