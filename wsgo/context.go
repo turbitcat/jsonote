@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+
+	"github.com/turbitcat/jsonote/v2/wsgo/header"
 )
 
 type Context struct {
@@ -97,7 +99,8 @@ func (c *Context) ReadAllBody() ([]byte, error) {
 }
 
 func (c *Context) ContentType() string {
-	return c.r.Header.Get("Content-Type")
+	v, _ := header.ParseValueAndParams(c.r.Header, "Content-Type")
+	return v
 }
 
 func (c *Context) BindJSON(v any) error {
