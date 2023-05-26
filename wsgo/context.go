@@ -6,8 +6,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-
-	"github.com/golang/gddo/httputil/header"
 )
 
 type Context struct {
@@ -99,8 +97,7 @@ func (c *Context) ReadAllBody() ([]byte, error) {
 }
 
 func (c *Context) ContentType() string {
-	v, _ := header.ParseValueAndParams(c.r.Header, "Content-Type")
-	return v
+	return c.r.Header.Get("Content-Type")
 }
 
 func (c *Context) BindJSON(v any) error {

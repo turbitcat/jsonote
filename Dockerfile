@@ -1,13 +1,13 @@
-FROM golang:latest
+FROM golang:1.19 AS builder
 
-WORKDIR /tmp/build
-RUN git clone https://github.com/turbitcat/jsonote.git
-WORKDIR /tmp/build/jsonote
-RUN go build
-RUN cp jsonote /root
-RUN rm -rf /tmp/build
-WORKDIR /root
+WORKDIR /go/src/jsonote
+COPY . .
+RUN CGO_ENABLED=0 go build -o /go/bin/jsonote
 
+FROM gcr.io/distroless/static-debian11
+COPY --from=builder /go/bin/jsonote /
+
+ENV JSONOTE_PATH=/data
 EXPOSE 8088
 
-ENTRYPOINT ["/root/jsonote"]
+CMD ["/jsonote"]
