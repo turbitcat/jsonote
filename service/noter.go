@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"path"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type Noter struct {
@@ -86,7 +88,7 @@ func (s *Noter) GetNoteHistory(noteId string) ([]Note, error) {
 
 func NewNote() *Note {
 	note := Note{}
-	note.Id = randStringBytesMaskImprSrcSB(8)
+	note.Id = uuid.New().String()
 	note.CreateTime = time.Now()
 	return &note
 }
