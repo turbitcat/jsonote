@@ -126,6 +126,24 @@ func defaultServer(noter *service.Noter) *wsgo.ServerMux {
 		note := getNote(c)
 		c.Json(http.StatusOK, note.Content)
 	})
+	// /history [readkey]
+	r.GET("/history", authReadByNoteId, func(c *wsgo.Context) {
+		id, _ := c.StringParam(paramNoteId)
+		his, err := noter.GetNoteHistory(id)
+		if err != nil {
+			c.Log("Err while loading history")
+			c.String(http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
+			return
+		}
+		ret := make([]map[string]any, len(his))
+		for i, h := range his {
+			ret[i] = map[string]any{
+				"content":   h.Content,
+				"timestamp": h.ModifyTime.UnixMilli(),
+			}
+		}
+		c.Json(http.StatusOK, ret)
+	})
 	// /save [writekey] body: content
 	r.POST("/save", authWriteByNoteId, func(c *wsgo.Context) {
 		note := getNote(c)
